@@ -1,10 +1,12 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
 plugins {
     id 'application'
     id 'java'
     id 'jacoco'
     id 'checkstyle'
     id 'pmd'
-    id 'com.github.spotbugs' version '1.7.1'
+    id 'com.github.spotbugs' version '6.0.26'
 }
 
 sourceSets {
@@ -19,9 +21,8 @@ sourceSets {
 }
 
 configurations {
-    defaultTestCompile.extendsFrom testCompile
     defaultTestImplementation.extendsFrom testImplementation
-    defaultTestRuntime.extendsFrom testRuntime
+    defaultTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 repositories {
@@ -29,13 +30,14 @@ repositories {
 }
 
 dependencies {
-    compile "com.google.guava:guava:$guavaVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
 
     compileOnly "com.github.spotbugs:spotbugs-annotations:$spotbugsAnnotationsVersion"
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
-    testCompile "org.mockito:mockito-core:$mockitoVersion"
-    testCompile "org.assertj:assertj-core:$assertjVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher:$junitPlatformVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.assertj:assertj-core:$assertjVersion"
 }
 
 task defaultTest(type: Test) {
@@ -60,7 +62,7 @@ jacoco {
 jacocoTestReport {
     executionData tasks.withType(Test)
     reports {
-        csv.enabled true
+        csv.required.set(true)
     }
 }
 
@@ -74,10 +76,10 @@ pmd {
     ruleSets = []
 }
 
-tasks.withType(com.github.spotbugs.SpotBugsTask) {
+tasks.withType(SpotBugsTask).configureEach {
     reports {
-        xml.enabled = false
-        html.enabled = true
+        xml.required.set(false)
+        html.required.set(true)
     }
 }
 
@@ -96,4 +98,6 @@ task staticAnalysis(type: GradleBuild) {
     ]
 }
 
-mainClassName = 'nl.tudelft.jpacman.Launcher'
+application {
+    mainClass = 'nl.tudelft.jpacman.Launcher'
+}

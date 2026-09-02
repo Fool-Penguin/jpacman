@@ -1,7 +1,6 @@
 package nl.tudelft.jpacman.board;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,12 +10,48 @@ import org.junit.jupiter.api.Test;
  * @author Arie van Deursen
  */
 public class DirectionTest {
+    /*
+     * The Direction input space has four disjoint partitions: NORTH, SOUTH,
+     * EAST, and WEST. Each test exercises one partition and verifies the
+     * complete (deltaX, deltaY) result.
+     */
     /**
      * Do we get the correct delta when moving north?
      */
     @Test
     void testNorth() {
         Direction north = Direction.valueOf("NORTH");
+        assertThat(north.getDeltaX()).isZero();
         assertThat(north.getDeltaY()).isEqualTo(-1);
+    }
+
+    /**
+     * Do we get the correct delta when moving south?
+     */
+    @Test
+    void testSouth() {
+        Direction south = Direction.valueOf("SOUTH");
+        assertThat(south.getDeltaX()).isZero();
+        assertThat(south.getDeltaY()).isEqualTo(1);
+    }
+
+    /**
+     * Do we get the correct delta when moving east?
+     */
+    @Test
+    void testEast() {
+        Direction east = Direction.valueOf("EAST");
+        assertThat(east.getDeltaX()).isEqualTo(1);
+        assertThat(east.getDeltaY()).isZero();
+    }
+
+    /**
+     * Do we get the correct delta when moving west?
+     */
+    @Test
+    void testWest() {
+        Direction west = Direction.valueOf("WEST");
+        assertThat(west.getDeltaX()).isEqualTo(-1);
+        assertThat(west.getDeltaY()).isZero();
     }
 }
